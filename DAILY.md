@@ -17,5 +17,5 @@
 6. 브라우저 시험(탭 4개 표시·JS 오류 없음·이미지/로고)
 7. 조사 종료 시각 기록(KST, 보고용 — 페이지에는 표시하지 않음) → 커밋·푸시 → Pages 반영 확인, 게시 시각 기록(KST)
 7-1. 21:00 KST 전이면 send_later로 21:00 KST 알림 예약 → 받으면 푸시 「서브컬쳐 브리핑이 갱신되었습니다 (YYYY-MM-DD)」 + 링크 / 21:00 이후면 즉시 「지연 게시」 알림 / 실패 시 즉시 실패 사유 알림
-8. PC 연결 시 `E:\Anthropic Claude Cowork\_Downloads\subculture_briefing\index.html` 에도 저장 → 저장 뒤 PC 파일 내용이 새 버전인지 확인(복사 직후 저장하면 이전 버전이 들어가는 경우가 있었음, 다르면 다시 저장)
+8. PC에는 저장하지 않음(GitHub Pages만 갱신). PC에서 파일·탐색기도 열지 않음
 9. SendUserMessage로 카테고리별 보고(출처 URL 포함)
