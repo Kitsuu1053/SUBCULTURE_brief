@@ -1,0 +1,145 @@
+<!-- 200 https://veritas-hub.cafe24.com/challenge?auth=b4qW-_hQSu3eSkC53mxR-YfFBc0QqxLaITVeHIk7tJK4ZMKZgRs0C_9qb3rLeoTFM6fT5zVUFmxZAP-KEySK6rUr_e-rVJgsqeuQz6OuivRXCuzEYtcqyGRyRRzxxcVdqUBvFq05CYQJ29L-8_98lNQVPgyMI_BaB-qHOpbgPRIBUJQ5XsyA0s1NbrwwUi1P6Q&url=aHR0cHM6Ly9jb21pY3MtYXJ0LmNvLmtyL3Byb2R1Y3Qvc2VhcmNoLmh0bWw_a2V5d29yZD0lRUIlQjQlODclRUMlQjklOTgmcGFnZT0x {'Content-Type': 'text/html', 'Transfer-Encoding': 'chunked', 'Connection': 'keep-alive', 'Date': 'Tue, 03 Nov 2026 11:57:27 GMT', 'content-encoding': 'gzip', 'vary': 'Accept-Encoding', 'Apigw-Requestid': 'GQzWShW8IE0EMZg=', 'X-Cache': 'Miss from cloudfront', 'Via': '1.1 fbc610cefe909c4febc0d681ddbb9a44.cloudfront.net (CloudFront)', 'X-Amz-Cf-Pop': 'IAD55-P2', 'X-Amz-Cf-Id': 'ua1GgLTwAx2DwQy1lCnOkadOPj0E6L7_aP6lYQFs1uH5nXtIjvlcKw=='} -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<title>ì¹´í24</title>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="https://img.cafe24.com/favicon/cafe24.ico" />
+<link rel="stylesheet" href="https://img.cafe24.com/images/akamai_blank/font/notosans.css">
+<link rel="stylesheet" type="text/css" href="https://img.cafe24.com/css/warn_v2.1.css" />
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+const TIMEOUT = 0;
+const REDIRECT_PREFIX = "https://comics-art.co.kr/.well-known/cc-challenge";
+
+let auth = null;
+let url = null;
+
+function getErrorHTML() {
+    return `
+            <div id="content">
+            <div class="imgWarn img403"><span></span></div>
+            <div class="mWarn">
+                <div class="inner">
+                    <h2>ì ì ì ìì´ ì íëììµëë¤.</h2>
+                    <p class="txtDesc">ìì íê³  ì¾ì í ìë¹ì¤ ì´ì©ì ìí´ <br class="RTB">ì¼ìì ì¼ë¡ <br class="RMB">ì ìì ì ííìµëë¤.<br class="RPB">ë§ì½ ì ìì ì¸ ì´ì© ì¤ <br class="RTB">ì´ íë©´ì´ <br class="RMB">ëíë¬ë¤ë©´<br class="RPB">
+                        ê³ ê°ì¼í°ë¡ ë¬¸ìí´ ì£¼ì¸ì. <br class="RMTB">ì´ì©ì ë¶í¸ì ëë ¤ ì£ì¡í©ëë¤.
+                    </p>
+                    <div class="mButton"><a href="javascript:history.back()" class="btnSubmit large"><span>ì´ì  íë©´ì¼ë¡ ëìê°ê¸°</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function javascriptCallback(challenge_token) {
+    if (!auth || !url) {
+        document.getElementById('container').innerHTML = getErrorHTML();
+        return;
+    }
+
+    fetch('/validate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            challenge_token, url, auth
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Request failed');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.token) {
+            setTimeout(() => {
+                const redirectUrl = new URL(REDIRECT_PREFIX);
+                redirectUrl.searchParams.set('token', data.token);
+                redirectUrl.searchParams.set('url', url);
+                window.location.href = redirectUrl.toString();
+            }, TIMEOUT);
+        } else {
+            document.getElementById('container').innerHTML = getErrorHTML();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('container').innerHTML = getErrorHTML();
+    });
+}
+
+function renderCaptcha() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    auth = urlParams.get('auth') || null;
+    url = urlParams.get('url') || null;
+
+    const TURNSTILE_BYPASS_ENABLED = "False"
+    if (TURNSTILE_BYPASS_ENABLED === "True") {
+        javascriptCallback('')
+        return;
+    }
+
+    const SITE_KEY = "0x4AAAAAABg1Yv76EgOVwBci"
+    const size = urlParams.get('size') || 'normal'; // normal, compact, flexible
+    const appearance = urlParams.get('appearance') || 'always'; // always, execute, interaction-only
+
+    turnstile.render('#myWidget', {
+        sitekey: SITE_KEY,
+        theme: 'light',
+        callback: javascriptCallback,
+        size: size,
+        appearance: appearance
+    });
+}
+
+window.onload = renderCaptcha;
+</script>
+</head>
+
+<body id="warn">
+    <div id="skipNavigation">
+        <p><a href="#content">ì»¨íì¸  ë°ë¡ê°ê¸°</a></p>
+    </div>
+    <hr class="layout" />
+
+    <div id="wrap">
+        <div id="header">
+            <h1 class="logo">
+                <a href="https://www.cafe24.com"><img src="https://img.cafe24.com/images/common/cafe24.svg" alt="cafe24" class="img_logo"></a>
+            </h1>
+        </div>
+        <hr class="layout" />
+
+        <div id="container">
+            <div id="content">
+                <div class="imgWarn img302"><span></span></div>
+                <div class="mWarn">
+                    <div class="inner">
+                        <h2>ìì í ì´ì©ì ìí´ <br class="RTB"><br class="RMPB">
+                            ê°ë¨í <br class="RTB">íì¸ì´ íìí´ì.</h2>
+                        <p class="txtDesc">ìë íì¸ì ë§ì¹ë©´ ìë íì´ì§ë¡ ëìê°ì.<br>
+                            </p>
+                        <div class="cloudFlareWrap">
+                            <div class="cloudFlare">
+                                <div id="myWidget"></div>
+                            </div>
+                            <p>ë§ì½ ìëì¼ë¡ ì´ëëì§ ìê±°ë,<br>ê³ì íì¸ ìì²­ì´ ë°ìíë¤ë©´ ì ì í ë¤ì ìëí´ì£¼ì¸ì.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="layout" />
+
+        <div id="footer">
+            Copyright &copy; Cafe24 Corp. All Rights Reserved.
+        </div>
+    </div>
+    </body>
+    </html>
