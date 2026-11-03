@@ -82,8 +82,13 @@ header{display:flex;align-items:center;gap:18px;padding:14px 22px}
 .st{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:900;color:#fff}
 .st.s1{background:var(--np)}.st.s2{background:#2a9fb3}.st.s3{background:#8a96a0}.st.s4{background:transparent;color:var(--ink-soft);border:1px dashed var(--ink-soft)}
 .shop{font-size:11px;font-weight:800;color:var(--ink-soft)}
-.tile .pr{font-size:15px;font-weight:900;color:var(--ink)}
-.tile .pr .sp{margin-left:6px;font-size:10.5px;font-weight:800;color:var(--np);border:1px solid rgba(62,47,132,.35);border-radius:6px;padding:1px 5px;vertical-align:2px}
+.tile .pr{font-size:30px;font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1.15}
+.tile .pr small{display:block;font-size:11px;letter-spacing:0}
+.tile .altw{margin-top:auto;border-top:1px solid rgba(255,255,255,.55);padding:8px 12px 10px}
+.tile .altw .alt{margin:0;font-size:12px}
+.tile .altw .alt summary{list-style:none}.tile .altw .alt summary::-webkit-details-marker{display:none}.tile .altw .alt summary::after{content:" ▾"}.tile .altw .alt[open] summary::after{content:" ▴"}
+.tile .altw .alt a{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px dashed rgba(74,99,112,.2)}
+.tile .altw .alt a:last-child{border-bottom:0}.tile .altw .alt a b{color:var(--ink);font-size:13px}.tile .altw .alt .at{font-size:11px}
 .tile .dl{color:var(--cherry);font-weight:800}
 
 .toggle{margin-left:auto;position:relative;display:grid;grid-template-columns:repeat(4,96px);align-items:center;height:40px;border-radius:999px;padding:4px;font-size:15px;font-weight:700;color:var(--ink-soft);user-select:none;cursor:pointer}
@@ -634,12 +639,14 @@ function lfRender(){const wc=w=>LIB.filter(x=>x.w===w).length;
    save();if(k==="w")lfRender();else c.classList.toggle("on");libRender()});}
 const logo=w=>WLOGO[w]?`<span class="wl"><img src="${WLOGO[w]}" alt="${esc(w)}"></span>`:"";
 function tile(x){const gb=x.g?badge(x.g,x.g):"";const sold=x.st==="품절";
- const alt=x.alt&&x.alt.length?`<details class="alt"><summary>다른 판매처·구성 ${x.alt.length}개</summary>${x.alt.map(o=>`<a href="${o.url}" target="_blank" rel="noopener">${esc(o.shop)}${o.note?` · <b>${esc(o.note)}</b>`:""} · ${esc(o.p||"가격 미표기")} · ${esc(o.rel||"발매 미표기")} · ${esc(o.st)}</a>`).join("")}<div class="me">표시 중: ${esc(x.shop)}${x.note?` · ${esc(x.note)}`:""}</div></details>`:"";
+ const pnum=v=>{const m=/^([\d,]+)원$/.exec(v||"");return m?+m[1].replace(/,/g,""):Infinity};
+ const alts=(x.alt||[]).filter(o=>o.shop!==x.shop).sort((p,q)=>pnum(p.p)-pnum(q.p));
+ const alt=alts.length?`<details class="alt"><summary>다른 판매처 ${alts.length}곳</summary>${alts.map(o=>`<a href="${o.url}" target="_blank" rel="noopener"><span class="as">${esc(o.shop)}${o.note?` · ${esc(o.note)}`:""}</span><b>${esc(o.p||"가격 미표기")}</b><span class="at">${esc(o.st)}</span></a>`).join("")}</details>`:"";
  return `<article class="tile glass${sold?" sold":""}"><a class="im" href="${x.url}" target="_blank" rel="noopener" title="판매 페이지 열기"><img src="${x.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"><div class="ph">${esc(x.ch.join(" · ")||x.w)}</div></a>
   <div class="bd2"><div class="badges">${gb}<span class="st ${STC[x.st]}">${x.st}</span>${x.flag?badge(x.flag==="재입고"?"newb":"chg",x.flag):""}<span class="shop">${x.shop}</span></div>
   <div class="t2" title="${esc(x.t)}">${esc(x.t)}</div>
-  <div class="pr">${esc(x.p&&x.p!=="1원"?x.p:"가격 미표기")}${x.split?`<small class="sp">분할결제 가능</small>`:""}</div>
-  <dl><dt>원작</dt><dd>${esc(x.w)}</dd><dt>캐릭터</dt><dd>${esc(x.ch.join(", ")||(x.w==="블루아카이브"?"옵션 선택형":"—"))}</dd><dt>발매</dt><dd>${esc(x.rel||"미표기")}</dd>${x.ddl?`<dt>마감</dt><dd class="dl">${x.ddl}</dd>`:""}<dt>분류</dt><dd>${x.c}</dd>${x.src?`<dt>출처</dt><dd><a href="${x.src}" target="_blank" rel="noopener">공식 X 공지</a></dd>`:""}</dl>${alt}${logo(x.w)}</div></article>`}
+  <div class="pr">${esc(x.p&&x.p!=="1원"?x.p:"가격 미표기")}</div>
+  <dl><dt>원작</dt><dd>${esc(x.w)}</dd><dt>캐릭터</dt><dd>${esc(x.ch.join(", ")||(x.w==="블루아카이브"?"옵션 선택형":"—"))}</dd><dt>발매</dt><dd>${esc(x.rel||"미표기")}</dd>${x.ddl?`<dt>마감</dt><dd class="dl">${x.ddl}</dd>`:""}<dt>분류</dt><dd>${x.c}</dd>${x.src?`<dt>출처</dt><dd><a href="${x.src}" target="_blank" rel="noopener">공식 X 공지</a></dd>`:""}</dl>${logo(x.w)}</div>${alt?`<div class="altw">${alt}</div>`:""}</article>`}
 function libRender(){const q=LF.q.trim();
  let L=LIB.filter(x=>(!LF.w.length||LF.w.includes(x.w))&&(!LF.ch.length||x.ch.some(c=>LF.ch.includes(c)))&&LF.g.includes(x.g||"")&&LF.st.includes(x.st)&&!(LF.noSold&&x.st==="품절")&&LF.shop.includes(x.shop)&&LF.c.includes(x.c)&&(!q||(x.t+x.ch.join(" ")+x.w).includes(q)));
  const pv=x=>x.pn??null,dated=x=>x.rk&&x.rk<999999,sold=x=>x.st==="품절"?1:0;
