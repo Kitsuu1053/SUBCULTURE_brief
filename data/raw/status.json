@@ -1,0 +1,63 @@
+{
+ "started_utc": "2026-11-03T11:55:58",
+ "probe": {
+  "https://storage.googleapis.com/artplex-recommender-public-artplex-automation/catalog-commerce/filter_data_version.json": [
+   200,
+   1283
+  ],
+  "https://artplex.co.kr/": [
+   200,
+   780878
+  ],
+  "https://comics-art.co.kr/": [
+   200,
+   5397
+  ],
+  "https://bluearchivestore.com/": [
+   200,
+   237632
+  ]
+ },
+ "steps": {
+  "ap_pointer": {
+   "base_catalog_file": "filter_data_v20260919_commerce_r1_opt.json",
+   "base_catalog_sha256": "69452a2e3f2ae1715480318706c7ee90c0a9a1f0e4318fc70cf85301c11a54b5",
+   "catalog_file": "filter_data_v20261103105030_11568afa4218_opt.json",
+   "catalog_gzip_file": "filter_data_v20261103105030_891640fa3cce_opt_gz.json",
+   "catalog_gzip_sha256": "891640fa3ccec31d1d92b5a5e2d351d4d6bd4190096f9ae1edd4994b8f9cb2f0",
+   "catalog_sha256": "11568afa42181900225dc6b51f2ddc43ee889d6ffe1c8d68838994c5a4163577",
+   "catalog_supplement_file": "catalog_supplement_v37eda7f0677b038d02beb2a6.json",
+   "catalog_supplement_product_count": 3212,
+   "catalog_supplement_sha256": "37eda7f0677b038d02beb2a6840e6143bd19b57e81eab6dac9d4146200d7a9f5",
+   "commerce_file": "commerce_v20261103105030_78618537c321.json",
+   "commerce_gzip_file": "commerce_v20261103105030_73eedc2d61eb_gz.json",
+   "commerce_gzip_sha256": "73eedc2d61eb54e15c24bd47619af38d6b68e50c33f8810544228817cfb24769",
+   "commerce_sha256": "78618537c3215f7e5f695f8afcd64a3986a21ff0d1be6fa40b8b4741de0470ca",
+   "product_count": 37056,
+   "schema_version": 1,
+   "shipping_file": "shipping_map_v20261103105030_60381247463c.json",
+   "shipping_sha256": "60381247463c10b76999fd38a7e784df4bba2355f73b8007aa530f39eac97846",
+   "source_checked_at": "2026-11-03T10:50:30.772248+00:00",
+   "updated_at": "2026-11-03T10:50:30.772248+00:00"
+  },
+  "artplex": {
+   "ok": true,
+   "items": 37056,
+   "sec": 9
+  },
+  "ca_sc": {
+   "ok": true,
+   "ca_items": 0,
+   "ca_unsold": 0,
+   "sc_items": 251,
+   "sec": 27,
+   "log_tail": "ca 블루 아카이브 0 pages 0\nca 봇치 더 록 0 pages 0\nca 초 카구야 0 pages 0\nca 체인소 맨 0 pages 0\nca 체인소맨 0 pages 0\nca 어둠의 실력자 0 pages 0\nca 무직전생 0 pages 0\nca 리제로 0 pages 0\nca Re:제로 0 pages 0\nca 이 멋진 세계에 축복 0 pages 0\nca 코노스바 0 pages 0\nca 노 게임 노 라이프 0 pages 0\nca 청춘 돼지 0 pages 0\nca 유녀전기 0 pages 0\nca 역시 내 청춘 0 pages 0\nca 시원찮은 그녀 0 pages 0\nca 사쿠라장 0 pages 0\nca 에로망가 0 pages 0\nca 내 여동생이 이렇게 0 pages 0\nca 비스크 돌 0 pages 0\nca 비스크돌 0 pages 0\nca 던전에서 만남 0 pages 0\nca 향기로운 꽃 0 pages 0\nca 카오루하나 0 pages 0\nca 중2병 0 pages 0\nca U149 0 pages 0\nsc 251\n"
+  },
+  "ca_opts": {
+   "ok": true,
+   "sec": 0,
+   "log_tail": "done 0 0\n"
+  }
+ },
+ "finished_utc": "2026-11-03T11:56:41"
+}
