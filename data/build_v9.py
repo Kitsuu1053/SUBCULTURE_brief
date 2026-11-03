@@ -59,7 +59,7 @@ WORKS={'봇치 더 록':('A',r'봇치','all'),'초카구야공주':('A',r'초\s?
  '유녀전기':('B',r'유녀전기','fig'),'역내청':('B',r'내 청춘 러브코메디|역내청','fig'),'시원찮은 그녀를 위한 육성방법':('B',r'시원찮은 그녀','fig'),
  '사쿠라장의 애완그녀':('B',r'사쿠라장','fig'),'에로망가 선생':('B',r'에로망가','fig'),'내 여동생이 이렇게 귀여울 리가 없어':('B',r'내 여동생이 이렇게','fig'),
  '그 비스크돌은 사랑을 한다':('B',r'비스크\s?돌','fig'),'던전에서 만남을 추구하면 안 되는 걸까':('B',r'던전에서 만남','fig'),'향기로운 꽃은 늠름하게 핀다':('B',r'향기로운 꽃','fig'),
- '중2병이라도 사랑이 하고 싶어!':('B',r'중2병이라도','fig'),'은혼':('B',r'은혼','fig'),'하이큐!!':('B',r'하이큐','fig'),'아이돌마스터 U149':('B',r'U149','fig')}
+ '중2병이라도 사랑이 하고 싶어!':('B',r'중2병이라도','fig'),'아이돌마스터 U149':('B',r'U149','fig')}
 BOC=['고토 히토리','이지치 니지카','야마다 료','키타 이쿠요','히로이 키쿠리','이지치 세이카','고토 후타리','PA씨'];KAG=['카구야','이로하','야치요']
 def wch(w,t):
     t=re.sub(r'초\s?카구야\s?(?:공주|히메)!?','',t)
@@ -84,6 +84,7 @@ def ship_nx(s):
 L=[]
 USED=re.compile(r'\[\d{8}-\d{3}\]|\[개봉\]|중고|잔금\s?결제|예약금|1차\s?결제')
 def add(**d):
+    if re.search(r'은혼|하이큐|銀魂|ハイキュー',d['t']) or d.get('w') in ('은혼','하이큐!!'):return
     if ACR.search(d['t']) or USED.search(d['t']):return
     if CANB.search(d['t']) and not METAL.search(d['t']):return
     d['pn']=pn(d['p']);d['nx']=ship_nx(d.pop('sh','')+' '+d['t']);d.setdefault('ddl','');d.setdefault('alt',[]);L.append(d)
@@ -112,7 +113,7 @@ for r in cj['data']:
         add(t=('블루 아카이브 '+nm) if '블루 아카이브' not in nm else nm,w='블루아카이브',ch=ch,g=g,c=cat(nm,pt),**base)
     else:
         for w,(g,p,mode) in WORKS.items():
-            if re.search(p,nm) or (w=='봇치 더 록' and ip=='봇치 더 록') or (w=='은혼' and ip=='은혼') or (w=='체인소 맨' and ip=='체인소 맨'):
+            if re.search(p,nm) or (w=='봇치 더 록' and ip=='봇치 더 록') or (w=='체인소 맨' and ip=='체인소 맨'):
                 c=cat(nm,pt)
                 if mode=='fig' and c!='피규어':break
                 add(t=nm,w=w,ch=wch(w,nm),g=g,c=c,**base);break
