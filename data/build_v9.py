@@ -66,12 +66,27 @@ def wch(w,t):
     if w=='봇치 더 록':return [c for c in BOC if c in t or c.split()[-1] in t]
     if w=='초카구야공주':return [c for c in KAG if c in t]
     return []
+# 예약 제외용 출고 판정: 주문일 기준 30일 이내 출고가 확실하지 않으면 nx=True (화면 비표시, 필터 전용)
+def ship_nx(s):
+    s=s or ''
+    if re.search(r'입고예정|입고 예정\)|입고중|순차\s?(?:발송|제작)|주문 제작',s) and not re.search(r'\d+월\s?입고 예정',s):return True
+    for a,b in re.findall(r'(?:주문 후|기간)\s*(\d+)(?:\s*~\s*(\d+))?\s*일',s):
+        if int(b or a)>30:return True
+    ms=[];y0=None
+    for y,a,b in re.findall(r'(?:(\d{2,4})년\s*)?(\d{1,2})(?:\s*~\s*(\d{1,2}))?월(?!\s*\d+일)',s):
+        if y:y0=int(y)
+        if y0 is None:continue
+        ms.append((y0,int(b or a)))
+    for y,m in ms:
+        y=y%100+2000
+        if y*100+m>TODAY_RK:return True
+    return False
 L=[]
 USED=re.compile(r'\[\d{8}-\d{3}\]|\[개봉\]|중고|잔금\s?결제|예약금|1차\s?결제')
 def add(**d):
     if ACR.search(d['t']) or USED.search(d['t']):return
     if CANB.search(d['t']) and not METAL.search(d['t']):return
-    d['pn']=pn(d['p']);d.setdefault('ddl','');d.setdefault('alt',[]);L.append(d)
+    d['pn']=pn(d['p']);d['nx']=ship_nx(d.pop('sh','')+' '+d['t']);d.setdefault('ddl','');d.setdefault('alt',[]);L.append(d)
 # --- 아트플렉스
 cj=json.load(open(os.path.join(RAW,'ap_catalog_file.json'),encoding='utf-8'));CS=cj['schema']
 BANAMES=set();_gw=re.compile('|'.join(GROUP),re.I)
@@ -89,7 +104,7 @@ for r in cj['data']:
     if sold and reg<REG_MIN:continue
     st='품절' if sold else ('예약' if d.get('is_preorder') else '판매중')
     desc=(d.get('shipping_date') or '')+' '+(d.get('simple_desc') or '')
-    base=dict(shop='아트플렉스',no=str(d['id']),p=f"{d['price']:,}원" if d.get('price') else '',rel=rel(desc) or rel(nm),ddl=ddl(desc),st=st,img=d['image'],url=f"https://artplex.co.kr/product/detail.html?product_no={d['id']}",reg=reg)
+    base=dict(shop='아트플렉스',no=str(d['id']),p=f"{d['price']:,}원" if d.get('price') else '',rel=rel(desc) or rel(nm),ddl=ddl(desc),st=st,img=d['image'],sh=desc,url=f"https://artplex.co.kr/product/detail.html?product_no={d['id']}",reg=reg)
     if ip=='블루 아카이브':
         ch=chars(nm,d.get('character') or []);g=grade(ch)
         if not g:  # 가상 C (화면 비표시): C 캐릭터만·캐릭터 미표기
