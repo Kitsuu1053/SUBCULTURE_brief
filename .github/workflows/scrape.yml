@@ -21,6 +21,9 @@ jobs:
           python-version: '3.11'
       - run: pip install requests beautifulsoup4
       - run: python data/gh_scrape.py
+      - name: 수집 상태
+        if: always()
+        run: cat data/raw/status.json || true
       - name: 결과 올리기
         if: always()
         run: |
@@ -28,4 +31,4 @@ jobs:
           git config user.email "41898242+github-actions[bot]@users.noreply.github.com"
           git add data/raw
           git commit -m "판매처 수집 자료 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M KST')" || echo "변경 없음"
-          for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done
+          for i in 1 2 3; do git pull --rebase --autostash -X theirs origin main && git push && break; sleep 5; done
