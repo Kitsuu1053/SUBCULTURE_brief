@@ -29,6 +29,8 @@ def cat(n,pt=''):
         if re.search(k,s):return v
     return '기타'
 ACR=re.compile(r'아크릴|acryl|케이스',re.I)
+CANB=re.compile(r'캔\s?뱃지|캔\s?배지|양철\s?뱃지|틴\s?뱃지')
+METAL=re.compile(r'메탈|금속')
 def rel(s):
     m=re.search(r'(\d{2})년\s*(\d{1,2})(?:\s*~\s*\d{1,2})?\s*월',s)
     if m:return f"20{m.group(1)}년 {int(m.group(2))}월"
@@ -65,9 +67,10 @@ def wch(w,t):
     if w=='초카구야공주':return [c for c in KAG if c in t]
     return []
 L=[]
-USED=re.compile(r'\[\d{8}-\d{3}\]|\[개봉\]|중고')
+USED=re.compile(r'\[\d{8}-\d{3}\]|\[개봉\]|중고|잔금\s?결제|예약금|1차\s?결제')
 def add(**d):
     if ACR.search(d['t']) or USED.search(d['t']):return
+    if CANB.search(d['t']) and not METAL.search(d['t']):return
     d['pn']=pn(d['p']);d.setdefault('ddl','');d.setdefault('alt',[]);L.append(d)
 # --- 아트플렉스
 cj=json.load(open(os.path.join(RAW,'ap_catalog_file.json'),encoding='utf-8'));CS=cj['schema']
@@ -99,6 +102,7 @@ for r in cj['data']:
                 add(t=nm,w=w,ch=wch(w,nm),g=g,c=c,**base);break
 # --- 코믹스아트
 R=json.load(open(os.path.join(RAW,'ca_raw.json'),encoding='utf-8'));seen=set()
+OPT=json.load(open(os.path.join(RAW,'ca_opts.json'),encoding='utf-8')) if os.path.exists(os.path.join(RAW,'ca_opts.json')) else {}
 def ca_st(x):
     if x['sold']:return '품절'
     s=x['name']+' '+x['txt']
@@ -109,7 +113,11 @@ def ca_base(x):
     img=x['img'];img=('https:'+img) if img.startswith('//') else img
     m=re.search(r'/(20\d{4})/',img);reg=m.group(1) if m else ''
     pm=re.search(r'판매가\s*:\s*([\d,]+원)',x['txt']);p=pm.group(1) if pm else ''
-    return dict(shop='코믹스아트',no=x['no'],p=p,rel=rel(x['name']+' '+x['txt']),ddl=ddl(x['txt']),st=ca_st(x),img=img,url=f"https://comics-art.co.kr/product/detail.html?product_no={x['no']}",reg=reg)
+    o=OPT.get(x['no']) or {}
+    split=bool(o.get('first'))
+    if o.get('full'):p=f"{o['full']:,}원"
+    elif split:p=''  # 1차결제만 확인되고 전체결제 금액을 못 읽으면 가격 미표기
+    return dict(shop='코믹스아트',no=x['no'],p=p,split=split,rel=rel(x['name']+' '+x['txt']),ddl=ddl(x['txt']),st=ca_st(x),img=img,url=f"https://comics-art.co.kr/product/detail.html?product_no={x['no']}",reg=reg)
 for k,arr in R.items():
     for x in arr:
         if x['no'] in seen:continue
@@ -183,6 +191,9 @@ for i,x in enumerate(L):G[f(i)].append(x)
 PRI={'샬레 스토어':0,'굿스마일코리아':1,'아트플렉스':2,'코믹스아트':3}
 out=[]
 for g in G.values():
+    # 코믹스아트 1차결제(예약금) 페이지 제거: 같은 제품의 코믹스아트 최고가 30% 미만 가격 행
+    mc=max([x['pn'] for x in g if x['shop']=='코믹스아트' and x['pn']] or [0])
+    g=[x for x in g if not (x['shop']=='코믹스아트' and x['pn'] and mc and x['pn']<0.3*mc)] or g
     ok=[x for x in g if x['st']!='품절' and not (x['ddl'] and x['ddl']<TODAY)] or g
     single=[x for x in ok if not unit(x['t']).startswith('박스')] or ok
     prices=[x['pn'] for x in single if x['pn']];mn=min(prices) if prices else None
@@ -191,7 +202,8 @@ for g in G.values():
         p=(mn/x['pn']) if (mn and x['pn']) else .5;r=rk(x['rel'])
         d=max(0,1-0.1*((r//100*12+r%100)-(er//100*12+er%100))) if (r and er) else .5
         return round(.6*p+.4*d,3)
-    rep=dict(sorted(single,key=lambda x:(-sc(x),PRI[x['shop']]))[0]);rep['score']=sc(rep)
+    rep=dict(sorted(single,key=lambda x:(-sc(x),bool(x.get('split')),PRI[x['shop']]))[0]);rep['score']=sc(rep)
+    if any(x.get('split') for x in g if x['shop']==rep['shop']):rep['split']=True
     rep['alt']=[dict(shop=x['shop'],p=x['p'],rel=x['rel'],st=x['st'],url=x['url'],score=sc(x),note=' · '.join(v for v in [unit(x['t']),dist(x['t'])] if v)) for x in g if x is not None and not (x['shop']==rep['shop'] and x['no']==rep['no'])]
     rep['note']=' · '.join(v for v in [unit(rep['t']),dist(rep['t'])] if v)
     rep['rk']=rk(rep['rel']) or 999999
