@@ -87,7 +87,7 @@ header{display:flex;align-items:center;gap:18px;padding:14px 22px}
 .tile .altw{margin-top:auto;border-top:1px solid rgba(255,255,255,.55);padding:8px 12px 10px}
 .tile .altw .alt{margin:0;font-size:12px}
 .tile .altw .alt summary{list-style:none}.tile .altw .alt summary::-webkit-details-marker{display:none}.tile .altw .alt summary::after{content:" ▾"}.tile .altw .alt[open] summary::after{content:" ▴"}
-.tile .altw .alt a{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px dashed rgba(74,99,112,.2)}
+.tile .altw .alt a{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px dashed rgba(74,99,112,.2)}
 .tile .altw .alt a:last-child{border-bottom:0}.tile .altw .alt a b{color:var(--ink);font-size:13px}.tile .altw .alt .at{font-size:11px}
 .tile .dl{color:var(--cherry);font-weight:800}
 
@@ -641,7 +641,7 @@ const logo=w=>WLOGO[w]?`<span class="wl"><img src="${WLOGO[w]}" alt="${esc(w)}">
 function tile(x){const gb=x.g?badge(x.g,x.g):"";const sold=x.st==="품절";
  const pnum=v=>{const m=/^([\d,]+)원$/.exec(v||"");return m?+m[1].replace(/,/g,""):Infinity};
  const alts=(x.alt||[]).filter(o=>o.shop!==x.shop).sort((p,q)=>pnum(p.p)-pnum(q.p));
- const alt=alts.length?`<details class="alt"><summary>다른 판매처 ${alts.length}곳</summary>${alts.map(o=>`<a href="${o.url}" target="_blank" rel="noopener"><span class="as">${esc(o.shop)}${o.note?` · ${esc(o.note)}`:""}</span><b>${esc(o.p||"가격 미표기")}</b><span class="at">${esc(o.st)}</span></a>`).join("")}</details>`:"";
+ const alt=alts.length?`<details class="alt"><summary>다른 판매처 ${alts.length}곳</summary>${alts.map(o=>`<a href="${o.url}" target="_blank" rel="noopener"><span class="as">${esc(o.shop)}</span><b>${esc(o.p||"가격 미표기")}</b></a>`).join("")}</details>`:"";
  return `<article class="tile glass${sold?" sold":""}"><a class="im" href="${x.url}" target="_blank" rel="noopener" title="판매 페이지 열기"><img src="${x.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"><div class="ph">${esc(x.ch.join(" · ")||x.w)}</div></a>
   <div class="bd2"><div class="badges">${gb}<span class="st ${STC[x.st]}">${x.st}</span>${x.flag?badge(x.flag==="재입고"?"newb":"chg",x.flag):""}<span class="shop">${x.shop}</span></div>
   <div class="t2" title="${esc(x.t)}">${esc(x.t)}</div>
