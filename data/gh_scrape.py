@@ -1,5 +1,5 @@
 """GitHub Actions용 판매처 수집 — 아트플렉스 공개 카탈로그·코믹스아트·샬레 스토어 → data/raw/ + data/raw/status.json"""
-import requests,json,os,sys,time,subprocess,shutil,urllib.parse,datetime
+import requests,json,os,sys,time,subprocess,shutil,urllib.parse,datetime,gzip
 D=os.path.dirname(os.path.abspath(__file__));RAW=os.path.join(D,'raw');os.makedirs(RAW,exist_ok=True)
 H={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36','Accept-Language':'ko-KR,ko;q=0.9'}
 ST={'started_utc':datetime.datetime.utcnow().isoformat(timespec='seconds'),'probe':{},'steps':{}}
@@ -19,28 +19,36 @@ try:
         if not v:continue
         u=v if str(v).startswith('http') else urllib.parse.urljoin(pu,str(v))
         r=requests.get(u,headers=H,timeout=120);r.raise_for_status()
-        open(os.path.join(RAW,fn),'wb').write(r.content)
-    cj=json.load(open(os.path.join(RAW,'ap_catalog_file.json'),encoding='utf-8'))
+        with gzip.open(os.path.join(RAW,fn+'.gz'),'wb',compresslevel=9) as g:g.write(r.content)
+        if os.path.exists(os.path.join(RAW,fn)):os.remove(os.path.join(RAW,fn))
+    cj=json.load(gzip.open(os.path.join(RAW,'ap_catalog_file.json.gz'),'rt',encoding='utf-8'))
     ST['steps']['artplex']=dict(ok=True,items=len(cj.get('data',[])),sec=round(time.time()-t))
 except Exception as e:ST['steps']['artplex']=dict(ok=False,err=type(e).__name__+': '+str(e)[:200])
 save()
-# 2) 코믹스아트 검색 + 샬레 스토어 목록
+# 2) 코믹스아트 검색 + 샬레 스토어 목록 — 결과가 0개면(차단 등) 이전 자료를 그대로 둔다
 t=time.time()
 try:
     p=subprocess.run([sys.executable,os.path.join(D,'scrape_ca_sc.py')],cwd=D,capture_output=True,text=True,timeout=3600)
+    res={}
     for fn in ['ca_raw.json','sc_raw.json']:
-        if os.path.exists(os.path.join(D,fn)):shutil.move(os.path.join(D,fn),os.path.join(RAW,fn))
-    ca=json.load(open(os.path.join(RAW,'ca_raw.json'),encoding='utf-8'));sc=json.load(open(os.path.join(RAW,'sc_raw.json'),encoding='utf-8'))
-    nos=sorted({x['no'] for arr in ca.values() for x in arr if x.get('no') and not x.get('sold')})
-    json.dump(nos,open(os.path.join(D,'ca_nos.json'),'w'))
-    ST['steps']['ca_sc']=dict(ok=p.returncode==0,ca_items=sum(len(v) for v in ca.values()),ca_unsold=len(nos),sc_items=len(sc),sec=round(time.time()-t),log_tail=p.stdout[-600:]+p.stderr[-600:])
-except Exception as e:ST['steps']['ca_sc']=dict(ok=False,err=type(e).__name__+': '+str(e)[:200])
+        f=os.path.join(D,fn)
+        if not os.path.exists(f):res[fn]='없음';continue
+        d=json.load(open(f,encoding='utf-8'));n=sum(len(v) for v in d.values()) if isinstance(d,dict) else len(d)
+        if n>0:shutil.move(f,os.path.join(RAW,fn));res[fn]=f'갱신 {n}개'
+        else:os.remove(f);res[fn]='0개(차단 추정) — 이전 자료 유지'
+    ST['steps']['ca_sc']=dict(ok=p.returncode==0,result=res,sec=round(time.time()-t),log_tail=p.stdout[-400:]+p.stderr[-400:])
+    ca_new=res.get('ca_raw.json','').startswith('갱신')
+except Exception as e:ST['steps']['ca_sc']=dict(ok=False,err=type(e).__name__+': '+str(e)[:200]);ca_new=False
 save()
-# 3) 코믹스아트 결제 옵션
+# 3) 코믹스아트 결제 옵션 — 검색이 갱신된 경우에만
 t=time.time()
-try:
-    p=subprocess.run([sys.executable,os.path.join(D,'scrape_ca_opts.py')],cwd=D,capture_output=True,text=True,timeout=3600)
-    if os.path.exists(os.path.join(D,'ca_opts.json')):shutil.move(os.path.join(D,'ca_opts.json'),os.path.join(RAW,'ca_opts.json'))
-    ST['steps']['ca_opts']=dict(ok=p.returncode==0,sec=round(time.time()-t),log_tail=p.stdout[-300:]+p.stderr[-600:])
-except Exception as e:ST['steps']['ca_opts']=dict(ok=False,err=type(e).__name__+': '+str(e)[:200])
+if ca_new:
+    try:
+        ca=json.load(open(os.path.join(RAW,'ca_raw.json'),encoding='utf-8'))
+        json.dump(sorted({x['no'] for arr in ca.values() for x in arr if x.get('no') and not x.get('sold')}),open(os.path.join(D,'ca_nos.json'),'w'))
+        p=subprocess.run([sys.executable,os.path.join(D,'scrape_ca_opts.py')],cwd=D,capture_output=True,text=True,timeout=3600)
+        if os.path.exists(os.path.join(D,'ca_opts.json')):shutil.move(os.path.join(D,'ca_opts.json'),os.path.join(RAW,'ca_opts.json'))
+        ST['steps']['ca_opts']=dict(ok=p.returncode==0,sec=round(time.time()-t),log_tail=p.stdout[-300:]+p.stderr[-300:])
+    except Exception as e:ST['steps']['ca_opts']=dict(ok=False,err=type(e).__name__+': '+str(e)[:200])
+else:ST['steps']['ca_opts']=dict(ok=False,result='코믹스아트 검색 미갱신 — 건너뜀(이전 자료 유지)')
 ST['finished_utc']=datetime.datetime.utcnow().isoformat(timespec='seconds');save()

@@ -81,6 +81,12 @@ def ship_nx(s):
         y=y%100+2000
         if y*100+m>TODAY_RK:return True
     return False
+import gzip
+def LJ(name):
+    """RAW/name 또는 RAW/name.gz(GitHub 수집본)를 읽는다"""
+    f=os.path.join(RAW,name)
+    if os.path.exists(f):return json.load(open(f,encoding='utf-8'))
+    return json.load(gzip.open(f+'.gz','rt',encoding='utf-8'))
 L=[]
 USED=re.compile(r'\[\d{8}-\d{3}\]|\[개봉\]|중고|잔금\s?결제|예약금|1차\s?결제')
 def add(**d):
@@ -89,13 +95,13 @@ def add(**d):
     if CANB.search(d['t']) and not METAL.search(d['t']):return
     d['pn']=pn(d['p']);d['nx']=ship_nx(d.pop('sh','')+' '+d['t']);d.setdefault('ddl','');d.setdefault('alt',[]);L.append(d)
 # --- 아트플렉스
-cj=json.load(open(os.path.join(RAW,'ap_catalog_file.json'),encoding='utf-8'));CS=cj['schema']
+cj=LJ('ap_catalog_file.json');CS=cj['schema']
 BANAMES=set();_gw=re.compile('|'.join(GROUP),re.I)
 for r in cj['data']:
     if r[5]=='블루 아카이브':
         for c in (r[6] or []):
             (GRP_ONLY.add(c) if (_gw.search(c) or c in('밀레니엄','트리니티','게헨나','아비도스','백귀야행','산해경','발키리','레드윈터','흥신소','미분류','페로로','아리우스','SRT','샬레')) else BANAMES.add(c))
-cm=json.load(open(os.path.join(RAW,'ap_commerce_file.json'),encoding='utf-8'))['products']
+cm=LJ('ap_commerce_file.json')['products']
 for r in cj['data']:
     d=dict(zip(CS,r));d.update(cm.get(str(d['id']),{}))
     nm=d['name'];ip=d['ip_name'] or '';pt=d['product_type'] or ''
@@ -118,7 +124,7 @@ for r in cj['data']:
                 if mode=='fig' and c!='피규어':break
                 add(t=nm,w=w,ch=wch(w,nm),g=g,c=c,**base);break
 # --- 코믹스아트
-R=json.load(open(os.path.join(RAW,'ca_raw.json'),encoding='utf-8'));seen=set()
+R=LJ('ca_raw.json');seen=set()
 OPT=json.load(open(os.path.join(RAW,'ca_opts.json'),encoding='utf-8')) if os.path.exists(os.path.join(RAW,'ca_opts.json')) else {}
 def ca_st(x):
     if x['sold']:return '품절'
@@ -151,7 +157,7 @@ for k,arr in R.items():
                 if mode=='fig' and c!='피규어':break
                 seen.add(x['no']);add(t=nm,w=w,ch=wch(w,nm),g=g,c=c,**b);break
 # --- 샬레 스토어
-for x in json.load(open(os.path.join(RAW,'sc_raw.json'),encoding='utf-8')):
+for x in LJ('sc_raw.json'):
     nm=x['name'];img=x['img'];img=('https:'+img) if img.startswith('//') else img
     m=re.search(r'/(20\d{4})/',img);reg=m.group(1) if m else ''
     if x['sold'] and reg<REG_MIN:continue

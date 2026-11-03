@@ -20,7 +20,6 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install requests beautifulsoup4
-      - run: python data/gh_probe_ca.py
       - run: python data/gh_scrape.py
       - name: 수집 상태
         if: always()
