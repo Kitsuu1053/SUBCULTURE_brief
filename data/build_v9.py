@@ -92,7 +92,8 @@ for r in cj['data']:
     base=dict(shop='아트플렉스',no=str(d['id']),p=f"{d['price']:,}원" if d.get('price') else '',rel=rel(desc) or rel(nm),ddl=ddl(desc),st=st,img=d['image'],url=f"https://artplex.co.kr/product/detail.html?product_no={d['id']}",reg=reg)
     if ip=='블루 아카이브':
         ch=chars(nm,d.get('character') or []);g=grade(ch)
-        if not g:continue
+        if not g:  # 가상 C (화면 비표시): C 캐릭터만·캐릭터 미표기
+            g='C';ch=[c for c in (d.get('character') or []) if c not in GRP_ONLY and c!='미분류']
         add(t=('블루 아카이브 '+nm) if '블루 아카이브' not in nm else nm,w='블루아카이브',ch=ch,g=g,c=cat(nm,pt),**base)
     else:
         for w,(g,p,mode) in WORKS.items():
@@ -126,7 +127,7 @@ for k,arr in R.items():
         nm=x['name']
         if '블루 아카이브' in nm or '블루아카이브' in nm:
             ch=chars(nm);g=grade(ch)
-            if not g:continue
+            if not g:g='C';ch=[n for n in BANAMES if len(n)>=3 and re.search(r'(?:^|\s)'+re.escape(n)+r'(?:\s|$)',nm)]
             seen.add(x['no']);add(t=nm,w='블루아카이브',ch=ch,g=g,c=cat(nm),**b);continue
         for w,(g,p,mode) in WORKS.items():
             if re.search(p,nm):
@@ -139,7 +140,7 @@ for x in json.load(open(os.path.join(RAW,'sc_raw.json'),encoding='utf-8')):
     m=re.search(r'/(20\d{4})/',img);reg=m.group(1) if m else ''
     if x['sold'] and reg<REG_MIN:continue
     ch=chars(nm);g=grade(ch)
-    if not g:continue
+    if not g:g='C';ch=[n for n in BANAMES if len(n)>=2 and re.search(r'(?:^|\s)'+re.escape(n)+r'(?:\s|$)',nm)]
     pm=re.search(r'판매가\s*:\s*([\d,]+원)',x['txt'])
     st='품절' if x['sold'] else ('예약' if '예약' in nm else '판매중')
     add(t='블루 아카이브 '+re.sub(r'^\[[^\]]*\]\s*','',nm),w='블루아카이브',ch=ch,g=g,c=cat(nm),shop='샬레 스토어',no=x['no'],p=pm.group(1) if pm else '',rel=rel(nm),ddl=ddl(x['txt']),st=st,img=img,url=f"https://bluearchivestore.com/product/detail.html?product_no={x['no']}",reg=reg)
@@ -238,7 +239,7 @@ for x in out:
         if prevrep and prevrep[0]!=(x['shop'],x['no']):x['flag']=x.get('flag') or '변경'
     else:x['new']=True
 # 등급별 가격 상한 (전체결제 기준): B 500,000원, A 1,000,000원, S 없음 — 가격 미표기는 유지
-CAP={'B':500000,'A':1000000}
+CAP={'B':500000,'A':1000000,'C':300000}
 out=[x for x in out if not (x.get('pn') and x['g'] in CAP and x['pn']>CAP[x['g']])]
 out.sort(key=lambda x:(-(x['rk'] if x['rk']<999999 else 0),x['shop']))
 json.dump(out,open(OUT,'w',encoding='utf-8'),ensure_ascii=False)
