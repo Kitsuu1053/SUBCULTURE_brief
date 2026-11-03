@@ -224,6 +224,9 @@ for x in out:
         prevrep=[k for k in keys if k in pv and 't' in pv[k]]
         if prevrep and prevrep[0]!=(x['shop'],x['no']):x['flag']=x.get('flag') or '변경'
     else:x['new']=True
+# 등급별 가격 상한 (전체결제 기준): B 500,000원, A 1,000,000원, S 없음 — 가격 미표기는 유지
+CAP={'B':500000,'A':1000000}
+out=[x for x in out if not (x.get('pn') and x['g'] in CAP and x['pn']>CAP[x['g']])]
 out.sort(key=lambda x:(-(x['rk'] if x['rk']<999999 else 0),x['shop']))
 json.dump(out,open(OUT,'w',encoding='utf-8'),ensure_ascii=False)
 c=collections.Counter
