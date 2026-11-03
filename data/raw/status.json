@@ -1,5 +1,5 @@
 {
- "started_utc": "2026-11-03T11:57:29",
+ "started_utc": "2026-11-03T11:59:35",
  "probe": {
   "https://storage.googleapis.com/artplex-recommender-public-artplex-automation/catalog-commerce/filter_data_version.json": [
    200,
@@ -43,21 +43,21 @@
   "artplex": {
    "ok": true,
    "items": 37056,
-   "sec": 9
+   "sec": 7
   },
   "ca_sc": {
    "ok": true,
-   "ca_items": 0,
-   "ca_unsold": 0,
-   "sc_items": 251,
-   "sec": 32,
-   "log_tail": "ca 블루 아카이브 0 pages 0\nca 봇치 더 록 0 pages 0\nca 초 카구야 0 pages 0\nca 체인소 맨 0 pages 0\nca 체인소맨 0 pages 0\nca 어둠의 실력자 0 pages 0\nca 무직전생 0 pages 0\nca 리제로 0 pages 0\nca Re:제로 0 pages 0\nca 이 멋진 세계에 축복 0 pages 0\nca 코노스바 0 pages 0\nca 노 게임 노 라이프 0 pages 0\nca 청춘 돼지 0 pages 0\nca 유녀전기 0 pages 0\nca 역시 내 청춘 0 pages 0\nca 시원찮은 그녀 0 pages 0\nca 사쿠라장 0 pages 0\nca 에로망가 0 pages 0\nca 내 여동생이 이렇게 0 pages 0\nca 비스크 돌 0 pages 0\nca 비스크돌 0 pages 0\nca 던전에서 만남 0 pages 0\nca 향기로운 꽃 0 pages 0\nca 카오루하나 0 pages 0\nca 중2병 0 pages 0\nca U149 0 pages 0\nsc 251\n"
+   "result": {
+    "ca_raw.json": "0개(차단 추정) — 이전 자료 유지",
+    "sc_raw.json": "갱신 251개"
+   },
+   "sec": 24,
+   "log_tail": "\nca 무직전생 0 pages 0\nca 리제로 0 pages 0\nca Re:제로 0 pages 0\nca 이 멋진 세계에 축복 0 pages 0\nca 코노스바 0 pages 0\nca 노 게임 노 라이프 0 pages 0\nca 청춘 돼지 0 pages 0\nca 유녀전기 0 pages 0\nca 역시 내 청춘 0 pages 0\nca 시원찮은 그녀 0 pages 0\nca 사쿠라장 0 pages 0\nca 에로망가 0 pages 0\nca 내 여동생이 이렇게 0 pages 0\nca 비스크 돌 0 pages 0\nca 비스크돌 0 pages 0\nca 던전에서 만남 0 pages 0\nca 향기로운 꽃 0 pages 0\nca 카오루하나 0 pages 0\nca 중2병 0 pages 0\nca U149 0 pages 0\nsc 251\n"
   },
   "ca_opts": {
-   "ok": true,
-   "sec": 0,
-   "log_tail": "done 0 0\n"
+   "ok": false,
+   "result": "코믹스아트 검색 미갱신 — 건너뜀(이전 자료 유지)"
   }
  },
- "finished_utc": "2026-11-03T11:58:17"
+ "finished_utc": "2026-11-03T12:00:10"
 }
