@@ -9,7 +9,11 @@
    - 탭3: 샬레 스토어·아트플렉스·코믹스아트·굿스마일코리아(X 공지) 전수 조회 → `data/build_v9.py`로 같은 제품 비교
      - 아트플렉스: 검색 화면은 판매중만 보이므로 공개 상품 목록 파일 사용 — `https://storage.googleapis.com/artplex-recommender-public-artplex-automation/catalog-commerce/filter_data_version.json` 의 catalog_file·commerce_file (품절·예약·출하 예정 포함)
      - 코믹스아트·샬레 스토어: `data/scrape_ca_sc.py` (작품별 검색 / 전체 목록), 코믹스아트 결제 옵션: `data/scrape_ca_opts.py` (판매중·예약 상품 상세 페이지 → 전체결제 금액)
-     - 작업 공간은 판매처에 접속할 수 없으므로 Chrome 또는 Kitsuu님 PC의 Python으로 실행
+     - 수집 자료는 `data/raw/` — GitHub Actions(`.github/workflows/scrape.yml`)가 1·11·21일 19:30 KST에 자동 수집해 올림(`data/raw/status.json`에 결과). 20:00 조사는 `git pull` 후 status.json의 started_utc가 오늘인지 확인, 아직 안 왔으면 최대 20:30까지 기다림(GitHub 예약 실행은 늦어질 수 있음)
+       - 아트플렉스(공개 카탈로그, gzip 보관)·샬레 스토어: GitHub에서 수집됨
+       - 코믹스아트: GitHub 서버 접속은 Cafe24 보안 확인(Cloudflare Turnstile)으로 막힘 → 우회하지 않음. Kitsuu님 PC가 연결돼 있으면 PC Python으로 scrape_ca_sc.py·scrape_ca_opts.py 실행 후 ca_raw.json·ca_opts.json을 `data/raw/`에 올림. PC가 없으면 `data/raw/`의 이전 코믹스아트 자료를 그대로 쓰고, 보고에 「코믹스아트 자료 YYYY-MM-DD 기준(미갱신)」이라고 적음
+       - 빌드: `python3 -I data/build_v9.py data/raw data/lib_(이전).json data/lib_(새).json`
+       - 수동 재수집: `data/raw/RUN` 파일 내용을 바꿔 푸시하면 수집 작업이 다시 돎
    - 수집 범위: 블루아카이브는 S·A·B 캐릭터 전 굿즈(C 제외), A 작품은 전 굿즈, B 작품은 피규어만, 아크릴·중고/개봉품 제외, 품절은 최근 12개월 등록분
    - 탭4: 보유품 정가·판매 상태 재확인, 하나은행 매매기준율(100엔당) 갱신
 4. 이전 조사(`data/lib_v*.json` 최신본)와 비교 → 「변경」「재입고」 표시
