@@ -15,7 +15,7 @@
 4. 이전 조사(`data/lib_v*.json` 최신본)와 비교 → 「변경」「재입고」 표시
 5. `index.html` 갱신, 상단 「최근 업데이트」 날짜 변경
 6. 브라우저 시험(탭 4개 표시·JS 오류 없음·이미지/로고)
-7. 조사 종료 시각 기록(KST) → 페이지 상단에 「조사 HH:MM ~ HH:MM KST · 게시 HH:MM KST」 → 커밋·푸시 → Pages 반영 확인, 게시 시각 기록(KST)
+7. 조사 종료 시각 기록(KST, 보고용 — 페이지에는 표시하지 않음) → 커밋·푸시 → Pages 반영 확인, 게시 시각 기록(KST)
 7-1. 21:00 KST 전이면 send_later로 21:00 KST 알림 예약 → 받으면 푸시 「서브컬쳐 브리핑이 갱신되었습니다 (YYYY-MM-DD)」 + 링크 / 21:00 이후면 즉시 「지연 게시」 알림 / 실패 시 즉시 실패 사유 알림
 8. PC 연결 시 `E:\Anthropic Claude Cowork\_Downloads\subculture_briefing\index.html` 에도 저장
 9. SendUserMessage로 카테고리별 보고(출처 URL 포함)
