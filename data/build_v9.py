@@ -174,12 +174,25 @@ def key8(x):
     t=re.sub(TAG,'',x['t']);t=re.sub(r'\(G\.S\.C\)|\(Max Factory\)|\(FURYU\)|\(SEGA\)','',t)
     t=re.sub(r'블루\s?아카이브|굿즈|피규어|스케일|중국 공식|공식|BA|◈[^◈]*◈','',t);t=re.sub(r'굿스마일\s?컴퍼니|굿스마일컴퍼니','GSC',t)
     return x['w']+'|'+re.sub(r'\s+','',t)
-# union-find over key7 / key8
+def key9(x):
+    """표기 통일 후 제품 라인+캐릭터+의상 버전 (스케일 표기 없어도 매칭, 의상 세트 등 부속품 제외)"""
+    t=x['t']
+    if not x['ch'] or re.search(r'의상|옷 세트|교체 파츠|받침|스탠드 세트',t):return None
+    t=re.sub(r'G\.?\s?S\.?\s?(?:Collection|컬렉션)','GS컬렉션',t,flags=re.I);t=re.sub(r'(?i)pop\s?up\s?parade','POPUP',t)
+    t=re.sub(r'메모리얼\s?로비','메모리얼로비',t);t=re.sub(r'(?i)\s*ver\.?','ver',t);t=re.sub(r'빅\s?40cm|큰\s?40cm|40cm','40cm',t)
+    line=None
+    for n,p in [('GS컬렉션',r'GS컬렉션'),('nendo',r'넨도로이드(?!\s?돌)[^\d]*(?:No\.?\s*)?(\d{3,4})'),('ndoll',r'넨도로이드\s?돌'),('figma',r'(?:figma|피그마)[^\d]*(\d{3})'),('pup',r'POPUP'),('choco',r'쵸코푸니|초코푸니'),('xst',r'XStellar')]:
+        m=re.search(p,t,re.I)
+        if m:line=n+(m.group(1) if m.groups() else '');break
+    if not line:return None
+    V=['메모리얼로비','수영복','드레스','바니','파자마','체육복','교복','사복','캐주얼','메이드','치어리더','응원단','무장','DX','보너스','스포츠','유카타','정월','크리스마스','밴드','라이브','40cm','A버전','B버전']
+    return '|'.join([x['w'],line,','.join(sorted(x['ch'])),','.join(v for v in V if v in t)])
+# union-find over key7 / key8 / key9
 par=list(range(len(L)))
 def f(i):
     while par[i]!=i:par[i]=par[par[i]];i=par[i]
     return i
-for kf in (key7,key8):
+for kf in (key7,key8,key9):
     first={}
     for i,x in enumerate(L):
         k=kf(x)
