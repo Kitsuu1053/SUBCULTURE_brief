@@ -1,5 +1,5 @@
 {
- "started_utc": "2026-11-11T17:57:18",
+ "started_utc": "2026-11-12T05:38:33",
  "probe": {
   "https://storage.googleapis.com/artplex-recommender-public-artplex-automation/catalog-commerce/filter_data_version.json": [
    200,
@@ -7,7 +7,7 @@
   ],
   "https://artplex.co.kr/": [
    200,
-   851555
+   852343
   ],
   "https://comics-art.co.kr/": [
    200,
@@ -15,35 +15,35 @@
   ],
   "https://bluearchivestore.com/": [
    200,
-   237637
+   238452
   ]
  },
  "steps": {
   "ap_pointer": {
    "base_catalog_file": "filter_data_v20260919_commerce_r1_opt.json",
    "base_catalog_sha256": "69452a2e3f2ae1715480318706c7ee90c0a9a1f0e4318fc70cf85301c11a54b5",
-   "catalog_file": "filter_data_v20261111154455_ab5a3b99914f_opt.json",
-   "catalog_gzip_file": "filter_data_v20261111154455_6ddd07a5d484_opt_gz.json",
-   "catalog_gzip_sha256": "6ddd07a5d48473837fabcfe86a0b0ec73dfad83df4ad91a6d837e957f5f73c6e",
-   "catalog_sha256": "ab5a3b99914fbfdb841e14094131f6c308b344a4c3400175d13a9c7bebc12dcb",
+   "catalog_file": "filter_data_v20261111232022_649413efb7ba_opt.json",
+   "catalog_gzip_file": "filter_data_v20261111232022_82d08f191c65_opt_gz.json",
+   "catalog_gzip_sha256": "82d08f191c6529e7c42326533906a7b97b18c65696def599c58f785b7706c630",
+   "catalog_sha256": "649413efb7ba80f161ba7c23e50bc192632fcba76abfb20875fdccf634a29a44",
    "catalog_supplement_file": "catalog_supplement_vb4014d7cbdd2b762110a2f3a.json",
    "catalog_supplement_product_count": 3936,
    "catalog_supplement_sha256": "b4014d7cbdd2b762110a2f3ac24711b20e98799a76dd8f85e11693b8040dcc56",
-   "commerce_file": "commerce_v20261111154455_ab9a5b6b8935.json",
-   "commerce_gzip_file": "commerce_v20261111154455_ce047f6466b7_gz.json",
-   "commerce_gzip_sha256": "ce047f6466b7fef0a4e4ed48689de033926f5dbd21b88a9eee948400875fbbe2",
-   "commerce_sha256": "ab9a5b6b8935f88544f004a3706a3f0fdf04be449ad733d2ff1f09b6d502283a",
+   "commerce_file": "commerce_v20261111232022_ac029e34a921.json",
+   "commerce_gzip_file": "commerce_v20261111232022_5f0fe2985ce4_gz.json",
+   "commerce_gzip_sha256": "5f0fe2985ce41054cefc267c8e1d6a5543d2fb9e71410b93fb3ac21ce8c24954",
+   "commerce_sha256": "ac029e34a9217c8bceab5ed5c6ee496cf8cfe8d430741703e815e00cc0f7a1f8",
    "product_count": 37779,
    "schema_version": 1,
-   "shipping_file": "shipping_map_v20261111154455_4c1b80480078.json",
+   "shipping_file": "shipping_map_v20261111232022_4c1b80480078.json",
    "shipping_sha256": "4c1b80480078dbcc8e15cb9c941bd39578f0854f2530aecc897e2bf9a902706b",
-   "source_checked_at": "2026-11-11T15:44:55.971797+00:00",
-   "updated_at": "2026-11-11T15:44:55.971797+00:00"
+   "source_checked_at": "2026-11-11T23:20:22.542977+00:00",
+   "updated_at": "2026-11-11T23:20:22.542977+00:00"
   },
   "artplex": {
    "ok": true,
    "items": 37779,
-   "sec": 11
+   "sec": 10
   },
   "ca_sc": {
    "ok": true,
@@ -51,7 +51,7 @@
     "ca_raw.json": "0개(차단 추정) — 이전 자료 유지",
     "sc_raw.json": "갱신 251개"
    },
-   "sec": 30,
+   "sec": 31,
    "log_tail": "\nca 무직전생 0 pages 0\nca 리제로 0 pages 0\nca Re:제로 0 pages 0\nca 이 멋진 세계에 축복 0 pages 0\nca 코노스바 0 pages 0\nca 노 게임 노 라이프 0 pages 0\nca 청춘 돼지 0 pages 0\nca 유녀전기 0 pages 0\nca 역시 내 청춘 0 pages 0\nca 시원찮은 그녀 0 pages 0\nca 사쿠라장 0 pages 0\nca 에로망가 0 pages 0\nca 내 여동생이 이렇게 0 pages 0\nca 비스크 돌 0 pages 0\nca 비스크돌 0 pages 0\nca 던전에서 만남 0 pages 0\nca 향기로운 꽃 0 pages 0\nca 카오루하나 0 pages 0\nca 중2병 0 pages 0\nca U149 0 pages 0\nsc 251\n"
   },
   "ca_opts": {
@@ -59,5 +59,5 @@
    "result": "코믹스아트 검색 미갱신 — 건너뜀(이전 자료 유지)"
   }
  },
- "finished_utc": "2026-11-11T17:58:05"
+ "finished_utc": "2026-11-12T05:39:21"
 }
