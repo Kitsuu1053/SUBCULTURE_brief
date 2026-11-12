@@ -2,6 +2,7 @@
 
 0. `TZ=Asia/Seoul date` 로 조사 시작 시각 기록 (KST)
 
+※ 실행 방식(2026-11-12~): 정기 작업이 새로 여는 세션은 이 저장소 쓰기 권한이 없어 403으로 실패(11/11) → 기존 정기 작업(trig_01F8Cm6TGwS64sDtHkTCD9zc)은 꺼 두고 지시문 보관용으로만 둠. 실제 실행은 Kitsuu님과의 대화 세션으로 들어오는 예약 메시지(send_later, 1·11·21일 20:00 KST)로 하며, 회차 끝에 다음 회차를 다시 예약함
 0. 시작 즉시 Kitsuu님께 「조사 시작」 메시지. 이후 각 단계 시작 때 `data/run_log.txt`에 「YYYY-MM-DD HH:MM KST 단계명」 한 줄을 추가해 커밋·푸시(실패 위치 추적용)
 1. 메모리 `/areas/subculture.md`, `/topics/blue-archive.md`, `/preferences.md` 읽기 — 이 문서와 다르면 메모리 우선
 2. 이 저장소 최신본 받기 → `index.html`이 작업 기준
