@@ -2,7 +2,7 @@
 사용: python3 build_v9.py <raw_dir> <prev_lib.json> <out.json>"""
 import json,re,sys,time,collections,os
 RAW,PREV,OUT=sys.argv[1:4]
-NOW=time.time();TODAY='2026-11-03';TODAY_RK=202611;REG_MIN='202511'
+NOW=time.time();TODAY='2026-11-12';TODAY_RK=202611;REG_MIN='202511'
 S_=['토키','프라나'];A_=['리오','키사키','세이아','히나','쿠루미']
 B_=['세리카','이부키','이로하','카즈사','나츠','이치카','사쿠라코','마리','미카','유즈','케이','유우카','나구사','슈에린','노조미','히카리','미야코','와카모']
 GR={**{c:'S' for c in S_},**{c:'A' for c in A_},**{c:'B' for c in B_}}
