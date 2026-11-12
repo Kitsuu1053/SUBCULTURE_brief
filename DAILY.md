@@ -2,6 +2,7 @@
 
 0. `TZ=Asia/Seoul date` 로 조사 시작 시각 기록 (KST)
 
+0. 시작 즉시 Kitsuu님께 「조사 시작」 메시지. 이후 각 단계 시작 때 `data/run_log.txt`에 「YYYY-MM-DD HH:MM KST 단계명」 한 줄을 추가해 커밋·푸시(실패 위치 추적용)
 1. 메모리 `/areas/subculture.md`, `/topics/blue-archive.md`, `/preferences.md` 읽기 — 이 문서와 다르면 메모리 우선
 2. 이 저장소 최신본 받기 → `index.html`이 작업 기준
 3. 조사 (`RULES.md` 기준)
@@ -9,7 +10,7 @@
    - 탭3: 샬레 스토어·아트플렉스·코믹스아트·굿스마일코리아(X 공지) 전수 조회 → `data/build_v9.py`로 같은 제품 비교
      - 아트플렉스: 검색 화면은 판매중만 보이므로 공개 상품 목록 파일 사용 — `https://storage.googleapis.com/artplex-recommender-public-artplex-automation/catalog-commerce/filter_data_version.json` 의 catalog_file·commerce_file (품절·예약·출하 예정 포함)
      - 코믹스아트·샬레 스토어: `data/scrape_ca_sc.py` (작품별 검색 / 전체 목록), 코믹스아트 결제 옵션: `data/scrape_ca_opts.py` (판매중·예약 상품 상세 페이지 → 전체결제 금액)
-     - 수집 자료는 `data/raw/` — GitHub Actions(`.github/workflows/scrape.yml`)가 1·11·21일 19:30 KST에 자동 수집해 올림(`data/raw/status.json`에 결과). 20:00 조사는 `git pull` 후 status.json의 started_utc가 오늘인지 확인, 아직 안 왔으면 최대 20:30까지 기다림(GitHub 예약 실행은 늦어질 수 있음)
+     - 수집 자료는 `data/raw/` — 조사 시작 직후 `data/raw/RUN` 내용을 현재 시각으로 바꿔 푸시하면 GitHub Actions(`.github/workflows/scrape.yml`)가 1분 안팎으로 수집해 올림. `git pull` 후 `data/raw/status.json`의 started_utc가 RUN 푸시 이후인지 확인(최대 15분 대기, 실패 시 이전 자료로 진행·보고). 시간 예약 수집은 GitHub 지연(11/11 7시간 반)으로 없앰
        - 아트플렉스(공개 카탈로그, gzip 보관)·샬레 스토어: GitHub에서 수집됨
        - 코믹스아트: GitHub 서버 접속은 Cafe24 보안 확인(Cloudflare Turnstile)으로 막힘 → 우회하지 않음. Kitsuu님 PC가 연결돼 있으면 PC Python으로 scrape_ca_sc.py·scrape_ca_opts.py 실행 후 ca_raw.json·ca_opts.json을 `data/raw/`에 올림. PC가 없으면 `data/raw/`의 이전 코믹스아트 자료를 그대로 쓰고, 보고에 「코믹스아트 자료 YYYY-MM-DD 기준(미갱신)」이라고 적음
        - 빌드: `python3 -I data/build_v9.py data/raw data/lib_(이전).json data/lib_(새).json`

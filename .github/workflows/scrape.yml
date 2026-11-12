@@ -1,7 +1,5 @@
 name: 판매처 수집
 on:
-  schedule:
-    - cron: '30 10 1,11,21 * *'   # 19:30 KST (1·11·21일)
   workflow_dispatch:
   push:
     paths: ['data/raw/RUN']
